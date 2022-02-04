@@ -1,0 +1,8 @@
+pvporcupine
+pvrecorder
+zmq
+pydub
+pvrhino
+google-cloud-texttospeech
+simpleaudio
+willump
