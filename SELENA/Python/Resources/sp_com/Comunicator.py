@@ -1,0 +1,106 @@
+from Errors import BadConfig, RecevingFromTypePUB, AsyncFromSyncType, SendingFromTypeSUB
+import zmq
+from zmq import Socket, Context
+from abc import ABC, abstractmethod
+from threading import Thread
+from pymitter import EventEmitter
+from typing import Callable
+
+class Comunicator():
+
+    context: Context
+    socket: Socket
+    turnToSend: bool
+    ee: EventEmitter
+
+    def __init__(self, portNumber: int, socketType: int, subscribe: str = None, identity: str = None, debug_f: bool = False) -> None:
+        
+        context = zmq.Context()
+
+        self.context = context
+        self.portNumber = portNumber
+        self.socketType = socketType
+        self.subscribe = subscribe
+        self.debug_f = debug_f
+        self.identity = identity
+        
+        self.ee = EventEmitter()
+
+        if(socketType == zmq.SUB and subscribe is None):
+            raise BadConfig
+
+        if(socketType == zmq.DEALER and identity is None):
+            raise BadConfig
+
+        if(socketType == zmq.REP):
+            self.turnToSend = False
+            self.ee.on("respond", self.sendMsg)
+        elif(socketType == zmq.REQ):
+            self.turnToSend = True
+        else:
+            self.turnToSend = None
+
+        self.connectToServer()
+ 
+    def debug(self, output: str) -> None:
+        if(self.debug_f):
+            print(output)
+
+    def connectToServer(self) -> Socket:
+        socket = self.context.socket(self.socketType)
+        
+        if(self.socketType == zmq.SUB and self.subscribe is not None):
+            socket.setsockopt_string(zmq.SUBSCRIBE, self.subscribe)
+            
+        elif(self.socketType == zmq.DEALER and self.identity is not None):
+            socket.setsockopt_string(zmq.IDENTITY, self.identity)
+
+        socket.connect("tcp://localhost:"+self.portNumber)
+        self.socket = socket
+        return socket
+
+    def recvMsg(self, block_f: bool = True) -> str:
+        if(self.socketType == zmq.PUB):
+            raise RecevingFromTypePUB
+        if(self.turnToSend is not None):
+            if(self.turnToSend):
+                raise AsyncFromSyncType
+
+        if(block_f):
+            self.debug("Waiting for reply.")
+            message:bytes = self.socket.recv()
+            self.debug(f"Received msg {message}")
+            
+            if(self.turnToSend is not None):
+                self.turnToSend = True
+            return message.decode()
+        else:
+            try:
+                self.debug("Checking if new message")
+                message:bytes = self.socket.recv(flags=zmq.NOBLOCK)
+            except zmq.Again as e:
+                self.debug("No new message")
+                return ''
+            if(self.turnToSend is not None):
+                self.turnToSend = True
+            self.debug(f"New message! {message}")
+            return message.decode()
+            
+    def sendMsg(self, msg: str) -> None:
+        if(self.socketType == zmq.SUB):
+            raise SendingFromTypeSUB
+        if(self.turnToSend is not None):
+            if(not self.turnToSend):
+                raise AsyncFromSyncType
+        
+        self.debug(f"Sending msg {msg}")
+        self.socket.send_string(msg)
+        if(self.turnToSend is not None):
+            self.turnToSend = False
+
+    def addMsgListener(self, event: str, handle: Callable) -> None:
+        self.ee.on(event, handle)
+
+    def emitEvent(self, event:str, *args, **kwargs) -> None:
+        self.ee.emit(event, args, kwargs)
+
