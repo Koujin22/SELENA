@@ -232,11 +232,11 @@ def main():
     config = Config(
         "Xp0vYgF1t2p3Q8p+2JrkVKg/eJ/5tT8PNrra2y20NLXHeNpqRzWNEg==",
         None,
-        r"C:\Users\world\source\repos\SELENA\SELENA\Python\Resources\porcupine_params_es.pv",
+        r".\Python\Resources\porcupine_params_es.pv",
         [
-            r"C:\Users\world\source\repos\SELENA\SELENA\Python\Resources\selena_es_windows_v2_1_0.ppn", 
-            r"C:\Users\world\source\repos\SELENA\SELENA\Python\Resources\oye-sel_es_windows_v2_1_0.ppn",
-            r"C:\Users\world\source\repos\SELENA\SELENA\Python\Resources\hey-sel_es_windows_v2_1_0.ppn"
+            r".\Python\Resources\selena_es_windows_v2_1_0.ppn", 
+            r".\Python\Resources\oye-sel_es_windows_v2_1_0.ppn",
+            r".\Python\Resources\hey-sel_es_windows_v2_1_0.ppn"
             ],
         [0.5, 0.5, 0.5],
         None,

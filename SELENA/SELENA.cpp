@@ -9,47 +9,47 @@
 
 #include "SELENA_Framework.hpp"
 #include "SELENA_Modules.hpp"
+#include "FrameworkResources.hpp"
+#include "ModulesResources.hpp"
+
+#include "Modules.hpp"
 
 #ifndef _WIN32
 #include <unistd.hpp>
 #else
-#include <windows.hpp>
+#include <Windows.h>
 #endif
 
 using namespace std;
 
 namespace {
-    vector<pair<thread*, token>*>* fw;
-    vector<thread*>* mods;
-
-    Handles* fwHandle;
-    HandlesMods* modsHandle;
+    FrameworkResources* fwRsrc = nullptr;
+    ModulesResources* modRsrc = nullptr;
 }
-
 
 void wakeUp() {
 
     //eventHandler.emit("pausewakeup");
-    fwHandle->sendWUS("pause");
+    fwRsrc->sendWUS("pause");
 
-    fwHandle->sendTTS("¿En qué te puedo ayudar?");
+    fwRsrc->sendTTS("¿En qué te puedo ayudar?");
 
-    string response = fwHandle->getIntent("process");
+    string response = fwRsrc->sendSTI("process");
 
     Intent intent(response);
 
     if (intent.isUnderstood()) {
         if (intent.getIntent() == "stop") {
-            fwHandle->sendTTS("Descansa");
+            fwRsrc->sendTTS("Descansa");
             this_thread::sleep_for(1750ms);
-            fwHandle->emit("stop");
+            fwRsrc->emit("stop");
         }
-        modsHandle->emit(intent.getIntent(), &intent);
+        modRsrc->emit(intent.getIntent(), &intent);
     }
     else
-        fwHandle->sendTTS("Lo lamento, no te pude entender");
+        fwRsrc->sendTTS("Lo lamento, no te pude entender");
 
-    fwHandle->sendWUS("resume");
+    fwRsrc->sendWUS("resume");
 
 }
 
@@ -63,42 +63,42 @@ int main() {
     cout << "####################################################" << endl;
     cout << "||                                                ||" << endl;
 
-    tie(fw, fwHandle) = SELENA_FW::init();
+    fwRsrc = SELENA_FW::init();
 
     cout << "||                                                ||" << endl;
     cout << "####################################################" << endl;
     cout << "||                                                ||" << endl;
 
-    tie(mods, modsHandle) = SELENA_Mods::init();
+    modRsrc = SELENA_Mods::init();
 
     cout << "||                                                ||" << endl;
     cout << "####################################################" << endl;
 
     //Subscribe wake to events
     cout << "Subscribe wake to events" << endl;
-    shared_ptr<void> listenerHandle = fwHandle->add("wake", wakeUp);
+    fwRsrc->addEventListenerPersist("wake", wakeUp);
 
-    mdl::eventListeners(modsHandle, fwHandle);
+    mods::addModulesEventHandlers(fwRsrc, modRsrc);
 
-    token tkn = fwHandle->add("ready", []() -> void {
-        fwHandle->sendTTS("Estoy lista");
-        });
+        
 
     //system ready
-    fwHandle->emit("ready");
+    fwRsrc->sendTTS("Estoy lista");
 
-
-    for (vector<thread*>::iterator it = mods->begin(); it != mods->end(); ++it) {
+    vector<thread*>* modsThreadToWiat = modRsrc->getThreads();
+    for (vector<thread*>::iterator it = modsThreadToWiat->begin(); it != modsThreadToWiat->end(); ++it) {
+        cout << "waiting on thread id: " << (*it)->get_id() << endl;
         (*it)->join();
     }
 
-    for (vector<pair<thread*, token>*>::iterator it = fw->begin(); it != fw->end(); ++it) {
-        ((*it)->first)->join();
+    vector<thread*>* threadsToWait = fwRsrc->getThreads();
+    for (vector<thread*>::iterator it = threadsToWait->begin(); it != threadsToWait->end(); ++it) {
+        cout << "waiting on thread id: "<<(*it)->get_id() << endl;
+        (*it)->join();
     }
 
-    delete mods;
-    delete fw;
-
+    delete modRsrc;
+    delete fwRsrc;
 
     return 0;
 }

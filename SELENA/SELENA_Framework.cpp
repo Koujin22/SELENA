@@ -1,68 +1,55 @@
 #include "SELENA_Framework.hpp"
+#include "MessageService.hpp"
+#include "PythonService.hpp"
 
-namespace {
+FrameworkResources* SELENA_FW::init()
+{
 
-    Event eventHandler;
-
-    function<void(string msg)> sendMsgWUS = nullptr;
-    zmq::socket_t* socketWUS = nullptr;
-
-    function<void(string msg)> sendMsgTTS = nullptr;
-    zmq::socket_t* socketTTS = nullptr;
-
-    function<string(string msg)> comunicate = nullptr;
-    zmq::socket_t* socketSTI = nullptr;
-
-}
-
-
-pair<vector<pair<thread*, token>*>*, Handles*> SELENA_FW::init(vector<zmq::socket_t*>* sockets) {
+    FrameworkResources* fwRsrc = new FrameworkResources();
 
     cout << "||  Booting Framewoork...                         ||" << endl;
 
 
     //Start Thread msg reciever for wakeup service
-    thread* wakeUpThread = new thread(mgs::createMessageService, "50000", &eventHandler, ref(sendMsgWUS), socketWUS);
-    cout << "||  [OK] Wake-up thread started!                  ||" << endl;
+    thread* wusThread = new thread(mgs::createMessageService, "50000", fwRsrc);
+    fwRsrc->addThread(wusThread);
+
+    cout << "||  [OK] Wake-up thread started! ("<<setfill('0') <<setw(6)<<wusThread->get_id() << ")         ||" << endl;
 
     //Start Thread msg sender for tts
-    thread* stiThread = new thread(mgs::messageSender, "50002", &eventHandler, ref(sendMsgTTS), socketTTS);
-    cout << "||  [OK] Text-to-speech thread started!           ||" << endl;
+    thread* ttsThread = new thread(mgs::messageSender, "50002", fwRsrc);
+    fwRsrc->addThread(ttsThread);
+    cout << "||  [OK] Text-to-speech thread started! (" << setfill('0') << setw(6) << ttsThread->get_id() << ")  ||" << endl;
 
     //Start Thread msg sender for sti
-    thread* ttsThread = new thread(mgs::messageReqRes, "50003", &eventHandler, ref(comunicate), socketSTI);
-    cout << "||  [OK] Speech-to-intent thread started!         ||" << endl;
+    thread* stiThread = new thread(mgs::messageReqRes, "50003", fwRsrc);
+    fwRsrc->addThread(stiThread);
+    cout << "||  [OK] Speech-to-intent thread started! (" << setfill('0') << setw(6) << stiThread->get_id() << ")||" << endl;
 
 
 
     //Start wake up recognition
-    token wusListener = pys::startProcess(&eventHandler, "demoPorcupine.py", true);
-    cout << "||  [OK] Wakeu-p service started!                 ||" << endl;
+    fwRsrc->addEventListenerPersist("stop", *pys::startProcess("demoPorcupine.py", false));
+    cout << "||  [OK] Wake-up service started!                 ||" << endl;
 
     //Start speech to intent
-    token stiListener = pys::startProcess(&eventHandler, "speechToIntent.py", true);
+    fwRsrc->addEventListenerPersist("stop", *pys::startProcess("speechToIntent.py", false));
     cout << "||  [OK] Speech-to-intent service started!        ||" << endl;
 
     //Start text to speech service
-    token ttsListener = pys::startProcess(&eventHandler, "textToSpeech.py", true);
+    fwRsrc->addEventListenerPersist("stop", *pys::startProcess("textToSpeech.py", false));
+
     cout << "||  [OK] Text-to-speech service started!          ||" << endl;
 
     cout << "||  [..] Waiting for threas to finish init...     ||" << endl;
-    while (sendMsgWUS == nullptr || comunicate == nullptr || sendMsgTTS == nullptr || socketSTI == nullptr || socketWUS == nullptr || socketTTS == nullptr) {
+
+
+    while (!fwRsrc->isReady()) {
+        this_thread::sleep_for(500ms);
     }
-
-    sockets->push_back(socketSTI);
-    sockets->push_back(socketWUS);
-    sockets->push_back(socketTTS);
-
-    vector<pair<thread*, token>*>* frameworkThreads = new vector<pair<thread*, token>*>;
-
-    frameworkThreads->push_back(new pair<thread*, token>(wakeUpThread, wusListener));
-    frameworkThreads->push_back(new pair<thread*, token>(stiThread, stiListener));
-    frameworkThreads->push_back(new pair<thread*, token>(ttsThread, ttsListener));
-
+   
     cout << "||  [OK] Threads finish init correctly!           ||" << endl;
 
     cout << "||  Framework booted correctly!                   ||" << endl;
-    return pair<vector<pair<thread*, token>*>*, Handles*>(frameworkThreads, new Handles(&sendMsgTTS, &sendMsgWUS, &comunicate, &eventHandler));
+    return fwRsrc;
 }

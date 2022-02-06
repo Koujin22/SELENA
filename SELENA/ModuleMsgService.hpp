@@ -1,10 +1,10 @@
 #pragma once
 
-#include "EventMods.hpp"
 #include <zmq.hpp>
 #include <functional>
 #include <thread>
+#include "ModulesResources.hpp"
 
 namespace mms {
-	void moduleSenderService(string portNumberPub, string portNumberSub, EventMods* event, function<void(string topic, string msg)>& sendMsg);
+	void moduleSenderService(string portNumberPub, string portNumberSub, ModulesResources* modRsrc );
 }

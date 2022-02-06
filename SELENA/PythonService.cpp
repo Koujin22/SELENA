@@ -1,25 +1,14 @@
 #include "PythonService.hpp"
 
-using namespace std;
-
-BOOL CALLBACK SendWMCloseMsg(HWND hwnd, LPARAM lParam)
+function<void(void)>* pys::startProcess(string pythonFile, bool show)
 {
-    DWORD dwProcessId = 0;
-    GetWindowThreadProcessId(hwnd, &dwProcessId);
-    if (dwProcessId == lParam)
-        SendMessageTimeout(hwnd, WM_CLOSE, 0, 0, SMTO_ABORTIFHUNG, 30000, NULL);
-    return TRUE;
-}
-
-
-shared_ptr<void>  pys::startProcess(Event* event, string pythonFile, bool show) {
 
     STARTUPINFOA si;
     PROCESS_INFORMATION pi;
     string command;
     string source;
 
-   
+
 
     ZeroMemory(&si, sizeof(si));
     si.cb = sizeof(si);
@@ -28,18 +17,15 @@ shared_ptr<void>  pys::startProcess(Event* event, string pythonFile, bool show) 
     if (!show) {
         si.dwFlags = STARTF_USESHOWWINDOW;
         si.wShowWindow = SW_HIDE;
-        source = "C:\\Windows\\system32\\cmd.exe";
-        command = "py C:\\Users\\world\\source\\repos\\SELENA\\SELENA\\Python\\Scripts\\" + pythonFile;
-
+        
         source = "C:\\Users\\world\\AppData\\Local\\Programs\\Python\\Python310\\python.exe";
-        command = "C:\\Users\\world\\AppData\\Local\\Programs\\Python\\Python310\\python.exe C:\\Users\\world\\source\\repos\\SELENA\\SELENA\\Python\\Scripts\\" + pythonFile;
+        command = "C:\\Users\\world\\AppData\\Local\\Programs\\Python\\Python310\\python.exe .\\Python\\Scripts\\" + pythonFile;
     }
     else {
-        source = "C:\\Users\\world\\AppData\\Local\\Programs\\Python\\Python310\\python.exe";
-        command = "C:\\Users\\world\\AppData\\Local\\Programs\\Python\\Python310\\python.exe C:\\Users\\world\\source\\repos\\SELENA\\SELENA\\Python\\Scripts\\" + pythonFile;
+        source = "C:\\Windows\\system32\\cmd.exe";
+        command = "C:\\Windows\\system32\\cmd.exe /k py .\\Python\\Scripts\\" + pythonFile;
     }
-
-    cout << "Starting python file with | cmd.exe : " << source << " | Script: " << command << endl;
+    //cout << "Starting python file with | exe : " << source << " | Script: " << command << endl;
 
     // Start the child process. 
     if (!CreateProcessA(
@@ -48,7 +34,7 @@ shared_ptr<void>  pys::startProcess(Event* event, string pythonFile, bool show) 
         NULL,           // Process handle not inheritable
         NULL,           // Thread handle not inheritable
         FALSE,          // Set handle inheritance to FALSE
-        DETACHED_PROCESS,              // No creation flags
+        CREATE_NEW_CONSOLE,              // No creation flags
         NULL,           // Use parent's environment block
         NULL,           // Use parent's starting directory 
         &si,            // Pointer to STARTUPINFO structure
@@ -59,25 +45,25 @@ shared_ptr<void>  pys::startProcess(Event* event, string pythonFile, bool show) 
         return nullptr;
     }
 
-    shared_ptr<void> listenerHandle = event->add("stop", [pythonFile, pi]() -> void
+
+
+    return new function<void(void)>([pythonFile, pi]() -> void
         {
-            CloseHandle(pi.hppThread);
-            WaitForInputIdle(pi.hppProcess, 1000);
-            if (WaitForSingleObject(pi.hppProcess, 1000) == WAIT_TIMEOUT)
+            CloseHandle(pi.hThread);
+            WaitForInputIdle(pi.hProcess, 500);
+            if (WaitForSingleObject(pi.hProcess, 500) == WAIT_TIMEOUT)
             {
                 EnumWindows(&SendWMCloseMsg, pi.dwProcessId);
-                if (WaitForSingleObject(pi.hppProcess, 1000) == WAIT_TIMEOUT)
+                if (WaitForSingleObject(pi.hProcess, 500) == WAIT_TIMEOUT)
                 {
                     // application did not close in a timely manner, do something...
 
                     // in this example, just kill it.  In a real world
                     // app, you should ask the user what to do...
-                    TerminateProcess(pi.hppProcess, 0);
+                    TerminateProcess(pi.hThread, 0);
                 }
             }
             // Close process and thread handles. 
-        });
-
-    return listenerHandle;
-
+        }
+    );
 }

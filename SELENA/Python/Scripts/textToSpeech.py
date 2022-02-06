@@ -15,7 +15,7 @@ import time
 
 context = zmq.Context()
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"C:\Users\world\source\repos\SELENA\SELENA\Python\Resources\helical-sol-339819-39563c1d52d4.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r".\Python\Resources\helical-sol-339819-39563c1d52d4.json"
 def main():
     
     client, voice, audio_config = init()

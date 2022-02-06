@@ -5,4 +5,4 @@ pydub
 pvrhino
 google-cloud-texttospeech
 simpleaudio
-willump
+lcu-driver

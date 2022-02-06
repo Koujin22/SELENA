@@ -59,7 +59,7 @@ class Comunicator():
         self.socket = socket
         return socket
 
-    def recvMsg(self, block_f: bool = True) -> str:
+    def recvMsg(self, block_f: bool = True) -> list[str]:
         if(self.socketType == zmq.PUB):
             raise RecevingFromTypePUB
         if(self.turnToSend is not None):
@@ -68,23 +68,25 @@ class Comunicator():
 
         if(block_f):
             self.debug("Waiting for reply.")
-            message:bytes = self.socket.recv()
+            message:list[bytes] = self.socket.recv_multipart()
             self.debug(f"Received msg {message}")
             
             if(self.turnToSend is not None):
                 self.turnToSend = True
-            return message.decode()
+            decodedMsg:list[str] = map(lambda msg : msg.decode(), message)
+            return decodedMsg
         else:
             try:
                 self.debug("Checking if new message")
-                message:bytes = self.socket.recv(flags=zmq.NOBLOCK)
+                message:list[bytes] = self.socket.recv_multipart(flags=zmq.NOBLOCK)
             except zmq.Again as e:
                 self.debug("No new message")
                 return ''
             if(self.turnToSend is not None):
                 self.turnToSend = True
             self.debug(f"New message! {message}")
-            return message.decode()
+            decodedMsg:list[str] = map(lambda msg : msg.decode(), message)
+            return decodedMsg
             
     def sendMsg(self, msg: str) -> None:
         if(self.socketType == zmq.SUB):

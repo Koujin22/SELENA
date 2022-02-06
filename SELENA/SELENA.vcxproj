@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -143,16 +143,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Event.cpp" />
-    <ClCompile Include="EventMods.cpp" />
     <ClCompile Include="FrameworkResources.cpp" />
-    <ClCompile Include="Handles.cpp" />
-    <ClCompile Include="HandlesMods.cpp" />
     <ClCompile Include="Intent.cpp" />
-    <ClCompile Include="ModuleLoader.cpp" />
     <ClCompile Include="ModuleMsgService.cpp" />
+    <ClCompile Include="Modules.cpp" />
+    <ClCompile Include="ModulesResources.cpp" />
     <ClCompile Include="PythonService.cpp" />
-    <ClCompile Include="Resources.cpp" />
     <ClCompile Include="SELENA.cpp" />
     <ClCompile Include="MessageService.cpp" />
     <ClCompile Include="SELENA_Framework.cpp" />
@@ -161,17 +157,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Event.hpp" />
-    <ClInclude Include="EventMods.hpp" />
-    <ClInclude Include="FrameworkResources.h" />
-    <ClInclude Include="Resources.hpp" />
-    <ClInclude Include="HandlesMods.hpp" />
+    <ClInclude Include="FrameworkResources.hpp" />
     <ClInclude Include="Intent.hpp" />
+    <ClInclude Include="Modules.hpp" />
+    <ClInclude Include="ModulesResources.hpp" />
+    <ClInclude Include="Resources.hpp" />
     <ClInclude Include="MessageService.hpp" />
-    <ClInclude Include="ModuleLoader.hpp" />
     <ClInclude Include="ModuleMsgService.hpp" />
     <ClInclude Include="PythonService.hpp" />
     <ClInclude Include="SELENA_Framework.hpp" />
     <ClInclude Include="SELENA_Modules.hpp" />
+    <ClInclude Include="ThreadPool.hpp" />
     <ClInclude Include="Util.hpp" />
   </ItemGroup>
   <ItemGroup>

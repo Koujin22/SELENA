@@ -25,30 +25,24 @@
     <Filter Include="Header Files\Modules">
       <UniqueIdentifier>{d4940126-d2af-4dd6-80a1-ef56619119ee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Util">
+      <UniqueIdentifier>{bb014b53-9e60-4faa-918f-fa044fbddb13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Util">
+      <UniqueIdentifier>{dc9d0ad6-ad28-4491-9c03-049d51d6d5a8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MessageService.cpp">
       <Filter>Source Files\Framework</Filter>
     </ClCompile>
-    <ClCompile Include="PythonService.cpp">
-      <Filter>Source Files\Framework</Filter>
-    </ClCompile>
-    <ClCompile Include="Util.cpp">
-      <Filter>Source Files\Framework</Filter>
-    </ClCompile>
     <ClCompile Include="SELENA.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleLoader.cpp">
-      <Filter>Source Files\Modules</Filter>
     </ClCompile>
     <ClCompile Include="ModuleMsgService.cpp">
       <Filter>Source Files\Modules</Filter>
     </ClCompile>
     <ClCompile Include="SELENA_Framework.cpp">
-      <Filter>Source Files\Framework</Filter>
-    </ClCompile>
-    <ClCompile Include="Handles.cpp">
       <Filter>Source Files\Framework</Filter>
     </ClCompile>
     <ClCompile Include="SELENA_Modules.cpp">
@@ -57,30 +51,24 @@
     <ClCompile Include="Intent.cpp">
       <Filter>Source Files\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="EventMods.cpp">
-      <Filter>Source Files\Modules</Filter>
+    <ClCompile Include="Util.cpp">
+      <Filter>Source Files\Util</Filter>
     </ClCompile>
-    <ClCompile Include="HandlesMods.cpp">
-      <Filter>Source Files\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Resources.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Event.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="PythonService.cpp">
+      <Filter>Source Files\Util</Filter>
     </ClCompile>
     <ClCompile Include="FrameworkResources.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="ModulesResources.cpp">
+      <Filter>Source Files\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Modules.cpp">
+      <Filter>Source Files\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MessageService.hpp">
-      <Filter>Header Files\Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="PythonService.hpp">
-      <Filter>Header Files\Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="Util.hpp">
       <Filter>Header Files\Framework</Filter>
     </ClInclude>
     <ClInclude Include="ModuleMsgService.hpp">
@@ -92,26 +80,32 @@
     <ClInclude Include="SELENA_Modules.hpp">
       <Filter>Header Files\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="EventMods.hpp">
+    <ClInclude Include="FrameworkResources.hpp">
+      <Filter>Header Files\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="PythonService.hpp">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Event.hpp">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources.hpp">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadPool.hpp">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util.hpp">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="ModulesResources.hpp">
       <Filter>Header Files\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Intent.hpp">
       <Filter>Header Files\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="HandlesMods.hpp">
+    <ClInclude Include="Modules.hpp">
       <Filter>Header Files\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleLoader.hpp">
-      <Filter>Header Files\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Resources.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Event.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FrameworkResources.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

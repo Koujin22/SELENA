@@ -185,8 +185,8 @@ def main():
     config = Config(
        "Xp0vYgF1t2p3Q8p+2JrkVKg/eJ/5tT8PNrra2y20NLXHeNpqRzWNEg==",
         None,
-        r"C:\Users\world\source\repos\SELENA\SELENA\Python\Resources\rhino_params_es.pv",
-        r"C:\Users\world\source\repos\SELENA\SELENA\Python\Resources\SELENA_es_windows_v2_1_0.rhn",
+        r".\Python\Resources\rhino_params_es.pv",
+        r".\Python\Resources\SELENA_es_windows_v2_1_0.rhn",
         None,
         0,
         None

@@ -1,10 +1,9 @@
 
 
 #pragma once
-#include "ModuleLoader.hpp"
-#include "ModuleMsgService.hpp"
-#include "HandlesMods.hpp"
+#include "ModulesResources.hpp"
+
 
 namespace SELENA_Mods {
-	pair<vector<thread*>*, HandlesMods*> init();
+	ModulesResources* init();
 }

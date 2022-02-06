@@ -1,26 +1,20 @@
 #include "SELENA_Modules.hpp"
-#include "EventMods.hpp"
-#include "HandlesMods.hpp"
+#include "ModuleMsgService.hpp"
 
-namespace {
-    EventMods eventHandler;
-    function<void(string topic, string msg)> sendToModule = nullptr;
-}
 
-pair<vector<thread*>*, HandlesMods*> SELENA_Mods::init() {
+ModulesResources* SELENA_Mods::init() {
 
 
     cout << "||                                                ||" << endl;
+    ModulesResources* modRsrc = new ModulesResources(5);
     cout << "||  Booting Modules Service...                    ||" << endl;
 
-    vector<thread*>* moduleThreads = new vector<thread*>();
-
-    moduleThreads->push_back(new thread(mms::moduleSenderService, "50004", "5005", &eventHandler, ref(sendToModule)));
+    modRsrc->addThread(new thread(mms::moduleSenderService, "50004", "50005", modRsrc));
     cout << "||  [OK] Module thread started!                   ||" << endl;
 
-    //while (sendToModule == nullptr) {}
+    while (!modRsrc->isReady()) {};
     cout << "||  Modules Services Booted correctly!            ||" << endl;
 
-    return pair<vector<thread*>*, HandlesMods*>(moduleThreads, new HandlesMods(&eventHandler, &sendToModule));
+    return modRsrc;
 
 }

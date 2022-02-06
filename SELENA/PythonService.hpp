@@ -1,13 +1,19 @@
 #pragma once
-#include <windows.hpp>
-#include <stdio.hpp>
-#include <string>
-#include <tchar.hpp>
+#include <Windows.h>
 #include <functional>
-#include <cstdio>
-#include "Intent.hpp"
-#include "Event.hpp"
+#include "FrameworkResources.hpp"
+
+
+inline BOOL CALLBACK SendWMCloseMsg(HWND hwnd, LPARAM lParam)
+{
+    DWORD dwProcessId = 0;
+    GetWindowThreadProcessId(hwnd, &dwProcessId);
+    if (dwProcessId == lParam)
+        SendMessageTimeout(hwnd, WM_CLOSE, 0, 0, SMTO_ABORTIFHUNG, 30000, NULL);
+    return TRUE;
+}
 
 namespace pys {
-	shared_ptr<void>  startProcess(Event* event, string pythonFile, bool show);
+    function<void(void)>* startProcess(string pythonFile, bool show);
+    
 }
