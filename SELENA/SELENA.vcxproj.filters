@@ -63,7 +63,10 @@
     <ClCompile Include="ModulesResources.cpp">
       <Filter>Source Files\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Modules.cpp">
+    <ClCompile Include="Module.cpp">
+      <Filter>Source Files\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleManager.cpp">
       <Filter>Source Files\Modules</Filter>
     </ClCompile>
   </ItemGroup>
@@ -104,8 +107,14 @@
     <ClInclude Include="Intent.hpp">
       <Filter>Header Files\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="Modules.hpp">
+    <ClInclude Include="Module.hpp">
       <Filter>Header Files\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleManager.hpp">
+      <Filter>Header Files\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModulePlatform.hpp">
+      <Filter>Header Files\Util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -20,6 +20,9 @@ class Config:
                 self.identity = value
             elif (option == '-d'):
                 self.debug_f = bool(value)
+            elif (option == '-n'):
+                self.identity = value
+                self.subscribe = value
             else:
                 raise OptionNotFound
 

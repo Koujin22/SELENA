@@ -145,8 +145,9 @@
   <ItemGroup>
     <ClCompile Include="FrameworkResources.cpp" />
     <ClCompile Include="Intent.cpp" />
+    <ClCompile Include="ModuleManager.cpp" />
     <ClCompile Include="ModuleMsgService.cpp" />
-    <ClCompile Include="Modules.cpp" />
+    <ClCompile Include="Module.cpp" />
     <ClCompile Include="ModulesResources.cpp" />
     <ClCompile Include="PythonService.cpp" />
     <ClCompile Include="SELENA.cpp" />
@@ -159,7 +160,9 @@
     <ClInclude Include="Event.hpp" />
     <ClInclude Include="FrameworkResources.hpp" />
     <ClInclude Include="Intent.hpp" />
-    <ClInclude Include="Modules.hpp" />
+    <ClInclude Include="ModuleManager.hpp" />
+    <ClInclude Include="Module.hpp" />
+    <ClInclude Include="ModulePlatform.hpp" />
     <ClInclude Include="ModulesResources.hpp" />
     <ClInclude Include="Resources.hpp" />
     <ClInclude Include="MessageService.hpp" />

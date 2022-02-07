@@ -33,7 +33,6 @@ void mms::moduleSenderService(string portNumberPub, string portNumberSub, Module
         cout << "Senidng msg to modules | " << topic2send << " | " << msg2send << endl;
         socket_pub->send(topic2send, zmq::send_flags::sndmore);
         socket_pub->send(msg2send, zmq::send_flags::none);
-        cout << "Se envio!" << endl;
         }));
 
     while (!stop) {

@@ -12,7 +12,7 @@
 #include "FrameworkResources.hpp"
 #include "ModulesResources.hpp"
 
-#include "Modules.hpp"
+#include "ModuleManager.hpp"
 
 #ifndef _WIN32
 #include <unistd.hpp>
@@ -78,7 +78,7 @@ int main() {
     cout << "Subscribe wake to events" << endl;
     fwRsrc->addEventListenerPersist("wake", wakeUp);
 
-    mods::addModulesEventHandlers(fwRsrc, modRsrc);
+    ModuleManager* modMng = new ModuleManager(modRsrc, fwRsrc);
 
         
 
@@ -87,16 +87,15 @@ int main() {
 
     vector<thread*>* modsThreadToWiat = modRsrc->getThreads();
     for (vector<thread*>::iterator it = modsThreadToWiat->begin(); it != modsThreadToWiat->end(); ++it) {
-        cout << "waiting on thread id: " << (*it)->get_id() << endl;
         (*it)->join();
     }
 
     vector<thread*>* threadsToWait = fwRsrc->getThreads();
     for (vector<thread*>::iterator it = threadsToWait->begin(); it != threadsToWait->end(); ++it) {
-        cout << "waiting on thread id: "<<(*it)->get_id() << endl;
         (*it)->join();
     }
 
+    delete modMng;
     delete modRsrc;
     delete fwRsrc;
 

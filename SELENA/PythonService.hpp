@@ -14,6 +14,8 @@ inline BOOL CALLBACK SendWMCloseMsg(HWND hwnd, LPARAM lParam)
 }
 
 namespace pys {
-    function<void(void)>* startProcess(string pythonFile, bool show);
+
+    function<bool(void)>* startProcess(string pythonFile, bool show, FrameworkResources* fwRsrc);
+    function<bool(void)>* startProcess(string pythonFile, bool show, FrameworkResources* fwRsrc, token& token);
     
 }

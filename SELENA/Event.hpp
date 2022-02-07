@@ -55,6 +55,7 @@ inline void Event<T>::addEventListenerPersist(string eventName, T fun)
 template<typename T>
 inline Event<T>::~Event()
 {
+
 	delete this->tokens;
 	delete this->thPool;
 }

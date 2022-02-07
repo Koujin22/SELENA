@@ -29,7 +29,7 @@ class Comunicator():
         if(socketType == zmq.SUB and subscribe is None):
             raise BadConfig
 
-        if(socketType == zmq.DEALER and identity is None):
+        if((socketType == zmq.DEALER or socketType == zmq.PUB )and identity is None):
             raise BadConfig
 
         if(socketType == zmq.REP):
@@ -52,7 +52,8 @@ class Comunicator():
         if(self.socketType == zmq.SUB and self.subscribe is not None):
             socket.setsockopt_string(zmq.SUBSCRIBE, self.subscribe)
             
-        elif(self.socketType == zmq.DEALER and self.identity is not None):
+        elif((self.socketType == zmq.DEALER or self.socketType == zmq.PUB)and self.identity is not None):
+            self.debug("seteo string identity con "+self.identity)
             socket.setsockopt_string(zmq.IDENTITY, self.identity)
 
         socket.connect("tcp://localhost:"+self.portNumber)
@@ -76,12 +77,8 @@ class Comunicator():
             decodedMsg:list[str] = map(lambda msg : msg.decode(), message)
             return decodedMsg
         else:
-            try:
-                self.debug("Checking if new message")
-                message:list[bytes] = self.socket.recv_multipart(flags=zmq.NOBLOCK)
-            except zmq.Again as e:
-                self.debug("No new message")
-                return ''
+            #self.debug("Checking if new message")
+            message:list[bytes] = self.socket.recv_multipart(flags=zmq.NOBLOCK)
             if(self.turnToSend is not None):
                 self.turnToSend = True
             self.debug(f"New message! {message}")
@@ -94,8 +91,10 @@ class Comunicator():
         if(self.turnToSend is not None):
             if(not self.turnToSend):
                 raise AsyncFromSyncType
-        
+                
         self.debug(f"Sending msg {msg}")
+        if(self.socketType == zmq.PUB):
+            self.socket.send_string(self.identity, zmq.SNDMORE)
         self.socket.send_string(msg)
         if(self.turnToSend is not None):
             self.turnToSend = False

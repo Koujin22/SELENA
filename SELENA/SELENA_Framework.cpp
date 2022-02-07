@@ -29,15 +29,15 @@ FrameworkResources* SELENA_FW::init()
 
 
     //Start wake up recognition
-    fwRsrc->addEventListenerPersist("stop", *pys::startProcess("demoPorcupine.py", false));
+    pys::startProcess("demoPorcupine.py", false, fwRsrc);
     cout << "||  [OK] Wake-up service started!                 ||" << endl;
 
     //Start speech to intent
-    fwRsrc->addEventListenerPersist("stop", *pys::startProcess("speechToIntent.py", false));
+    pys::startProcess("speechToIntent.py", false, fwRsrc);
     cout << "||  [OK] Speech-to-intent service started!        ||" << endl;
 
     //Start text to speech service
-    fwRsrc->addEventListenerPersist("stop", *pys::startProcess("textToSpeech.py", false));
+    pys::startProcess("textToSpeech.py", false, fwRsrc);
 
     cout << "||  [OK] Text-to-speech service started!          ||" << endl;
 

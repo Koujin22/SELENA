@@ -97,7 +97,14 @@ inline void ThreadPoolMng<T>::thread_task()
 		// if the task is invalid, it means we are asked to abort:
 		if (!fn.valid()) return;
 		// otherwise, run the task:
-		fn();
+		try {
+			fn();
+		}
+		catch (...) {
+			cout << "Error en pool thread" << endl;
+		}
+
+
 	}
 }
 
